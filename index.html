@@ -480,10 +480,105 @@
                 height: 48px;
             }
         }
+
+        /* ── High-Tech Reticle Custom Cursor ── */
+        @media (hover: hover) and (pointer: fine) {
+            body, a, button, input, select, textarea, [role="button"], label {
+                cursor: none !important;
+            }
+        }
+
+        .cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 6px;
+            background-color: #abd600;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(171, 214, 0, 0.9), 0 0 4px #abd600;
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, opacity 0.3s ease;
+            opacity: 0;
+            will-change: transform;
+        }
+
+        .cursor-reticle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 36px;
+            height: 36px;
+            border: 1px dashed rgba(171, 214, 0, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999998;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 12px rgba(171, 214, 0, 0.15);
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.3s ease,
+                        box-shadow 0.3s ease,
+                        background-color 0.3s ease,
+                        opacity 0.3s ease;
+            opacity: 0;
+            will-change: transform;
+        }
+
+        .cursor-reticle .bracket {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+        }
+
+        .cursor-reticle .bracket-tl { top: -2px; left: -2px; border-top: 2px solid #abd600; border-left: 2px solid #abd600; }
+        .cursor-reticle .bracket-tr { top: -2px; right: -2px; border-top: 2px solid #abd600; border-right: 2px solid #abd600; }
+        .cursor-reticle .bracket-bl { bottom: -2px; left: -2px; border-bottom: 2px solid #abd600; border-left: 2px solid #abd600; }
+        .cursor-reticle .bracket-br { bottom: -2px; right: -2px; border-bottom: 2px solid #abd600; border-right: 2px solid #abd600; }
+
+        /* Dynamic System Lock State (Hovering Interactive Elements) */
+        .cursor-reticle.locked {
+            width: 54px;
+            height: 54px;
+            border-style: solid;
+            border-color: rgba(171, 214, 0, 0.85);
+            background: rgba(171, 214, 0, 0.08);
+            box-shadow: 0 0 24px rgba(171, 214, 0, 0.45), inset 0 0 15px rgba(171, 214, 0, 0.15);
+        }
+
+        .cursor-reticle.locked .bracket {
+            width: 9px;
+            height: 9px;
+        }
+        .cursor-reticle.locked .bracket-tl { transform: translate(-3px, -3px) rotate(45deg); }
+        .cursor-reticle.locked .bracket-tr { transform: translate(3px, -3px) rotate(45deg); }
+        .cursor-reticle.locked .bracket-bl { transform: translate(-3px, 3px) rotate(45deg); }
+        .cursor-reticle.locked .bracket-br { transform: translate(3px, 3px) rotate(45deg); }
+
+        .cursor-dot.locked {
+            width: 8px;
+            height: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 0 14px #abd600, 0 0 6px #ffffff;
+        }
     </style>
 </head>
 
 <body class="blueprint-grid">
+    <!-- High-Tech Reticle Custom Cursor -->
+    <div id="custom-cursor-wrapper" class="hidden md:block pointer-events-none">
+        <div id="cursor-dot" class="cursor-dot"></div>
+        <div id="cursor-reticle" class="cursor-reticle">
+            <span class="bracket bracket-tl"></span>
+            <span class="bracket bracket-tr"></span>
+            <span class="bracket bracket-bl"></span>
+            <span class="bracket bracket-br"></span>
+        </div>
+    </div>
+
     <div class="fixed inset-0 pointer-events-none z-10 overflow-hidden opacity-40">
         <div
             class="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-tertiary to-transparent shadow-[0_0_15px_rgba(171,214,0,0.5)] animate-scan-global">
@@ -1141,6 +1236,71 @@
                 modal.classList.toggle('flex');
             }
         }
+
+        // ── High-Tech Reticle Custom Cursor Logic (Physics & System Lock) ──
+        (function initCustomCursor() {
+            const dot = document.getElementById('cursor-dot');
+            const reticle = document.getElementById('cursor-reticle');
+            if (!dot || !reticle) return;
+
+            // Only run on fine pointer / mouse devices
+            if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                return;
+            }
+
+            let mouseX = -100;
+            let mouseY = -100;
+            let reticleX = -100;
+            let reticleY = -100;
+            let isVisible = false;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+
+                dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+
+                if (!isVisible) {
+                    isVisible = true;
+                    dot.style.opacity = '1';
+                    reticle.style.opacity = '1';
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                isVisible = false;
+                dot.style.opacity = '0';
+                reticle.style.opacity = '0';
+            });
+
+            // Smooth physics lerp animation loop (0.16 lerp factor for weightless feel)
+            function animate() {
+                if (isVisible) {
+                    reticleX += (mouseX - reticleX) * 0.16;
+                    reticleY += (mouseY - reticleY) * 0.16;
+                    reticle.style.transform = `translate3d(${reticleX}px, ${reticleY}px, 0) translate(-50%, -50%)`;
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            // Dynamic System Lock on hover
+            const interactiveQuery = 'a, button, input, select, textarea, [role="button"], .interactive, #back-to-top, summary';
+
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest(interactiveQuery)) {
+                    reticle.classList.add('locked');
+                    dot.classList.add('locked');
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest(interactiveQuery)) {
+                    reticle.classList.remove('locked');
+                    dot.classList.remove('locked');
+                }
+            });
+        })();
     </script>
 
     <!-- Resume Modal -->
