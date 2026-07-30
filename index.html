@@ -92,6 +92,9 @@
                         "margin-desktop": "64px",
                         "gutter": "32px"
                     },
+                    "screens": {
+                        "xs": "375px"
+                    },
                     "fontFamily": {
                         "label-mono": ["JetBrains Mono"],
                         "body-sm": ["Geist"],
@@ -288,19 +291,26 @@
             border-left: 2px solid #abd600;
         }
 
+        /* ── Responsive: mobile section spacing ── */
+        @media (max-width: 767px) {
+            .mobile-px { padding-left: 20px; padding-right: 20px; }
+            .mobile-py { padding-top: 80px; padding-bottom: 80px; }
+            .mobile-py-sm { padding-top: 48px; padding-bottom: 48px; }
+        }
+
         /* Back to Top Button */
         #back-to-top {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
+            bottom: 1.25rem;
+            right: 1.25rem;
             z-index: 99;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 4px;
-            width: 52px;
-            height: 52px;
+            width: 48px;
+            height: 48px;
             border: 1px solid rgba(171, 214, 0, 0.4);
             background: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(12px);
@@ -357,6 +367,69 @@
             border-bottom: 2px solid rgba(171, 214, 0, 0.4);
             border-left: 2px solid rgba(171, 214, 0, 0.4);
         }
+
+        /* ── Mobile menu panel ── */
+        #mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 0;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.97);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(68, 71, 72, 0.3);
+            padding: 8px 0 24px;
+            z-index: 49;
+        }
+
+        #mobile-menu.open { display: flex; }
+
+        #mobile-menu a, #mobile-menu button {
+            padding: 14px 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #c4c7c7;
+            text-align: left;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            width: 100%;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s, background 0.2s;
+        }
+
+        #mobile-menu a:hover, #mobile-menu button:hover {
+            color: #abd600;
+            background: rgba(171, 214, 0, 0.05);
+        }
+
+        /* ── Hero heading responsive ── */
+        @media (max-width: 767px) {
+            .hero-h1 {
+                font-size: clamp(52px, 14vw, 80px);
+                line-height: 1.0;
+                letter-spacing: -0.03em;
+            }
+        }
+
+        /* ── CTA buttons: prevent overflow on small screens ── */
+        @media (max-width: 639px) {
+            .cta-btn {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+                padding-left: 20px;
+                padding-right: 20px;
+                font-size: 10px;
+                word-break: break-all;
+            }
+        }
     </style>
 </head>
 
@@ -383,9 +456,10 @@
     </style>
     <!-- Top Navigation Shell -->
     <header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant/20">
-        <nav class="flex justify-between items-center h-20 px-margin-desktop max-w-container-max mx-auto">
-            <div class="font-display-lg text-body-lg font-bold tracking-tighter text-on-surface">
+        <nav class="flex justify-between items-center h-16 md:h-20 px-5 md:px-margin-desktop max-w-container-max mx-auto relative">
+            <div class="font-display-lg text-sm md:text-body-lg font-bold tracking-tighter text-on-surface">
                 SULTAN DHIYAUL MUAKHIR</div>
+            <!-- Desktop nav -->
             <div class="hidden md:flex gap-8 items-center">
                 <a class="font-label-mono text-label-mono uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors duration-300"
                     href="#projects">Projects</a>
@@ -396,52 +470,59 @@
                 <button onclick="toggleResumeModal()"
                     class="ml-4 border border-outline-variant py-2 px-6 font-label-mono text-label-mono uppercase tracking-widest hover:bg-tertiary hover:text-background transition-all duration-300">Resume</button>
             </div>
-            <!-- Mobile Menu Toggle (Simplified) -->
-            <div class="md:hidden">
-                <span class="material-symbols-outlined text-primary">menu</span>
-            </div>
+            <!-- Mobile hamburger -->
+            <button id="hamburger-btn" onclick="toggleMobileMenu()" class="md:hidden flex items-center justify-center w-11 h-11 text-primary" aria-label="Open navigation menu">
+                <span id="hamburger-icon" class="material-symbols-outlined">menu</span>
+            </button>
         </nav>
+        <!-- Mobile dropdown menu -->
+        <div id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+            <a href="#projects" onclick="closeMobileMenu()">Projects</a>
+            <a href="#experience" onclick="closeMobileMenu()">Experience</a>
+            <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+            <button onclick="closeMobileMenu(); toggleResumeModal()">Resume</button>
+        </div>
     </header>
     <main>
         <!-- Hero Section -->
         <section
-            class="min-h-screen flex flex-col justify-center px-margin-desktop max-w-container-max mx-auto relative pt-20">
+            class="min-h-screen flex flex-col justify-center px-5 md:px-margin-desktop max-w-container-max mx-auto relative pt-16 md:pt-20">
             <div
                 class="absolute top-1/4 right-margin-desktop hidden lg:block opacity-20 font-label-mono text-xs rotate-90 origin-right">
                 LOCATION_KOTA_BEKASI // LAT_-6.2383 / LONG_106.9756
             </div>
-            <div class="border-l border-tertiary pl-8 md:pl-16 space-y-4">
-                <p class="font-label-mono text-tertiary tracking-widest text-neon">SYSTEM_BOOT_SEQUENCE // 2026</p>
-                <h1 class="font-display-lg text-display-lg md:text-[120px] leading-tight max-w-5xl"
+            <div class="border-l border-tertiary pl-6 md:pl-16 space-y-4">
+                <p class="font-label-mono text-[10px] md:text-label-mono text-tertiary tracking-widest text-neon">SYSTEM_BOOT_SEQUENCE // 2026</p>
+                <h1 class="hero-h1 font-display-lg text-display-lg md:text-[120px] leading-tight max-w-5xl"
                     style="transform: translate(1.86px, -6.035px);">
                     SULTAN<br />DHIYAUL<br />MUAKHIR
                 </h1>
-                <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-12 mt-12">
-                    <h2 class="font-headline-md text-headline-md text-on-surface-variant">
+                <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-12 mt-8 md:mt-12">
+                    <h2 class="font-headline-md text-2xl md:text-headline-md text-on-surface-variant">
                         Software Engineer &amp; <br class="md:hidden" /> Systems Architect
                     </h2>
                     <div class="max-w-md">
-                        <p class="font-body-lg text-body-lg text-on-surface-variant/80">
+                        <p class="font-body-lg text-base md:text-body-lg text-on-surface-variant/80">
                             Building robust software architectures, high-performance web applications, and weightless
                             digital interfaces with mathematical precision and engineering rigor.
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="absolute bottom-12 left-margin-desktop flex gap-4 items-center animate-bounce">
+            <div class="absolute bottom-8 md:bottom-12 left-5 md:left-margin-desktop flex gap-4 items-center animate-bounce">
                 <span class="material-symbols-outlined text-tertiary">south</span>
                 <span class="font-label-mono text-label-mono uppercase">Scroll to Initialize</span>
             </div>
         </section>
         <!-- Narrative Section -->
         <section
-            class="py-section-gap px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-            <div class="md:col-span-5 space-y-8">
+            class="py-20 md:py-section-gap px-5 md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-gutter items-center">
+            <div class="md:col-span-5 space-y-6 md:space-y-8">
                 <span class="font-label-mono text-label-mono text-tertiary uppercase">[MANIFESTO]</span>
-                <h3 class="font-display-lg text-headline-md">Defying Complexity through Software Engineering</h3>
+                <h3 class="font-display-lg text-2xl md:text-headline-md">Defying Complexity through Software Engineering</h3>
             </div>
             <div
-                class="md:col-span-7 font-body-lg text-body-lg text-on-surface-variant space-y-6 border-l border-outline-variant/30 pl-8">
+                class="md:col-span-7 font-body-lg text-base md:text-body-lg text-on-surface-variant space-y-6 border-l border-outline-variant/30 pl-6 md:pl-8">
                 <p class="">
                     In an era of digital entropy, I build systems that resist decay. Engineering is not just about
                     writing code; it's about defining the laws of a virtual universe. My approach treats every pixel as
@@ -451,7 +532,7 @@
                     By merging the structural integrity of modern frameworks with the fluid principles of "Antigravity"
                     design, I create products that feel essential, not just functional.
                 </p>
-                <div class="pt-8 flex gap-8">
+                <div class="pt-6 md:pt-8 flex gap-6 md:gap-8">
                     <div class="flex flex-col">
                         <span class="font-label-mono text-2xl text-tertiary font-bold">01.</span>
                         <span class="font-label-mono text-xs uppercase opacity-60">Precision Logic</span>
@@ -468,7 +549,7 @@
             </div>
         </section>
         <!-- Featured Projects Section -->
-        <section class="py-section-gap px-margin-desktop max-w-container-max mx-auto" id="projects">
+        <section class="py-20 md:py-section-gap px-5 md:px-margin-desktop max-w-container-max mx-auto" id="projects">
             <div
                 class="mb-16 border-b border-outline-variant/20 pb-8 flex flex-col md:flex-row justify-between items-start md:items-end">
                 <div>
@@ -601,9 +682,9 @@
         </section>
         <!-- Technical Proficiency -->
         <section
-            class="py-section-gap bg-surface-container-lowest/50 backdrop-blur-sm border-y border-outline-variant/10 relative overflow-hidden"
+            class="py-20 md:py-section-gap bg-surface-container-lowest/50 backdrop-blur-sm border-y border-outline-variant/10 relative overflow-hidden"
             id="proficiency-section">
-            <div class="px-margin-desktop max-w-container-max mx-auto">
+            <div class="px-5 md:px-margin-desktop max-w-container-max mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
                     <div class="md:col-span-4 mb-12 md:mb-0">
                         <h2 class="font-display-lg text-headline-md mb-8">Technical Proficiency</h2>
@@ -759,7 +840,7 @@
             </div>
         </section>
         <!-- Professional Evolution (Experience) -->
-        <section class="py-section-gap px-margin-desktop max-w-container-max mx-auto" id="experience">
+        <section class="py-20 md:py-section-gap px-5 md:px-margin-desktop max-w-container-max mx-auto" id="experience">
             <div class="mb-20">
                 <h2 class="font-display-lg text-headline-md uppercase">Professional Evolution</h2>
                 <p class="font-label-mono text-xs mt-2 text-on-surface-variant">LOG_ID: SULTAN_DM_HISTORY_V2</p>
@@ -844,23 +925,23 @@
         </section>
         <!-- CTA Section -->
         <section
-            class="py-section-gap px-margin-desktop max-w-container-max mx-auto text-center relative overflow-hidden"
+            class="py-20 md:py-section-gap px-5 md:px-margin-desktop max-w-container-max mx-auto text-center relative overflow-hidden"
             id="contact">
             <!-- Background Decorative Text -->
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] overflow-hidden">
                 <span class="font-display-lg text-[25vw] leading-none whitespace-nowrap">CONNECT</span>
             </div>
-            <div class="relative z-10 space-y-12">
-                <p class="font-label-mono text-tertiary tracking-widest text-neon uppercase animate-pulse">LOCATION //
+            <div class="relative z-10 space-y-8 md:space-y-12">
+                <p class="font-label-mono text-[10px] md:text-label-mono text-tertiary tracking-widest text-neon uppercase animate-pulse">LOCATION //
                     KOTA BEKASI, INDONESIA</p>
-                <h2 class="font-display-lg text-display-lg-mobile md:text-display-lg max-w-4xl mx-auto">LET'S BUILD THE
+                <h2 class="font-display-lg text-[clamp(36px,10vw,80px)] leading-tight max-w-4xl mx-auto">LET'S BUILD THE
                     FUTURE</h2>
-                <div class="flex flex-col md:flex-row justify-center gap-6 items-center">
-                    <a class="bg-tertiary text-background px-12 py-5 font-label-mono text-label-mono uppercase font-bold tracking-widest hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_30px_rgba(171,214,0,0.3)]"
+                <div class="flex flex-col items-stretch md:flex-row justify-center gap-4 md:gap-6 md:items-center">
+                    <a class="cta-btn bg-tertiary text-background px-8 md:px-12 py-4 md:py-5 font-label-mono text-[10px] md:text-label-mono uppercase font-bold tracking-widest hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_30px_rgba(171,214,0,0.3)] min-h-[44px] flex items-center justify-center"
                         href="https://wa.me/6287863933402" target="_blank" rel="noopener noreferrer">
                         WHATSAPP (+62 878-6393-3402)
                     </a>
-                    <a class="font-label-mono text-label-mono uppercase tracking-widest border border-outline-variant px-12 py-5 hover:bg-on-surface hover:text-background transition-colors"
+                    <a class="cta-btn font-label-mono text-[10px] md:text-label-mono uppercase tracking-widest border border-outline-variant px-8 md:px-12 py-4 md:py-5 hover:bg-on-surface hover:text-background transition-colors min-h-[44px] flex items-center justify-center break-all"
                         href="mailto:sultandhiyaulmuakhir@gmail.com">
                         SULTANDHIYAULMUAKHIR@GMAIL.COM
                     </a>
@@ -869,25 +950,25 @@
         </section>
     </main>
     <!-- Footer Shell -->
-    <footer class="w-full py-section-gap border-t border-outline-variant/10 bg-surface-container-lowest">
+    <footer class="w-full py-16 md:py-section-gap border-t border-outline-variant/10 bg-surface-container-lowest">
         <div
-            class="flex flex-col md:flex-row justify-between items-start md:items-center px-margin-desktop max-w-container-max mx-auto gap-8">
+            class="flex flex-col md:flex-row justify-between items-start md:items-center px-5 md:px-margin-desktop max-w-container-max mx-auto gap-8">
             <div class="space-y-2">
                 <div class="font-display-lg text-body-lg font-extrabold text-on-surface uppercase">Sultan Dhiyaul
                     Muakhir</div>
                 <p class="font-label-mono text-xs text-on-surface-variant/60">Software Engineer &amp; UI/UX Designer •
                     Kota Bekasi</p>
             </div>
-            <div class="flex flex-wrap gap-8">
-                <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-tertiary hover:translate-x-2 transition-all duration-300"
+            <div class="flex flex-wrap gap-6 md:gap-8">
+                <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-tertiary hover:translate-x-2 transition-all duration-300 min-h-[44px] flex items-center"
                     href="mailto:sultandhiyaulmuakhir@gmail.com">Email</a>
-                <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-tertiary hover:translate-x-2 transition-all duration-300"
+                <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-tertiary hover:translate-x-2 transition-all duration-300 min-h-[44px] flex items-center"
                     href="https://www.linkedin.com/in/sultan-dhiyaul-muakhir" target="_blank"
                     rel="noopener noreferrer">LinkedIn</a>
-                <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-tertiary hover:translate-x-2 transition-all duration-300"
+                <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-tertiary hover:translate-x-2 transition-all duration-300 min-h-[44px] flex items-center"
                     href="https://github.com/sultandhiyaulmuakhir-cmd" target="_blank"
                     rel="noopener noreferrer">GitHub</a>
-                <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-tertiary hover:translate-x-2 transition-all duration-300"
+                <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-tertiary hover:translate-x-2 transition-all duration-300 min-h-[44px] flex items-center"
                     href="https://wa.me/6287863933402" target="_blank" rel="noopener noreferrer">WhatsApp</a>
             </div>
         </div>
@@ -908,6 +989,26 @@
             if (hero) {
                 hero.style.transform = `translate(${moveX}px, ${moveY}px)`;
             }
+        });
+
+        // Mobile hamburger menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('hamburger-icon');
+            const isOpen = menu.classList.toggle('open');
+            icon.textContent = isOpen ? 'close' : 'menu';
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('hamburger-icon');
+            menu.classList.remove('open');
+            icon.textContent = 'menu';
+        }
+
+        // Close mobile menu on resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) closeMobileMenu();
         });
 
         // Back to Top: scroll to top and clear URL hash
