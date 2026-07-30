@@ -894,7 +894,7 @@
     </footer>
 
     <!-- Back to Top Button -->
-    <button id="back-to-top" aria-label="Back to top" title="Back to top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+    <button id="back-to-top" aria-label="Back to top" title="Back to top" onclick="scrollToTop()">
         <span class="btt-arrow material-symbols-outlined" style="font-size: 18px; font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;">arrow_upward</span>
         <span style="font-family: 'JetBrains Mono', monospace; font-size: 7px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7; line-height: 1;">TOP</span>
     </button>
@@ -909,6 +909,12 @@
                 hero.style.transform = `translate(${moveX}px, ${moveY}px)`;
             }
         });
+
+        // Back to Top: scroll to top and clear URL hash
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            history.pushState({}, '', location.pathname);
+        }
 
         // Sticky header opacity on scroll + Back to Top visibility
         const backToTopBtn = document.getElementById('back-to-top');
@@ -929,6 +935,28 @@
                 }
             }
         });
+
+        // Auto-update URL hash based on visible section
+        const heroSection = document.querySelector('main > section:first-child');
+        const namedSections = document.querySelectorAll('section[id]');
+
+        const urlObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                if (entry.target === heroSection) {
+                    // At the top — clear hash, restore clean URL
+                    history.replaceState({}, '', location.pathname);
+                } else {
+                    history.replaceState({}, '', '#' + entry.target.id);
+                }
+            });
+        }, {
+            threshold: 0,
+            rootMargin: '-40% 0px -55% 0px'
+        });
+
+        if (heroSection) urlObserver.observe(heroSection);
+        namedSections.forEach(s => urlObserver.observe(s));
 
         // Sequential Decrypt Animation
         const decryptText = (element) => {
