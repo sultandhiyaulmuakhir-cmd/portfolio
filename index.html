@@ -535,30 +535,34 @@
     <main>
         <!-- Hero Section -->
         <section
-            class="min-h-screen flex flex-col justify-center px-margin-desktop max-w-container-max mx-auto relative pt-20 hero-section">
+            class="min-h-screen flex flex-col px-margin-desktop max-w-container-max mx-auto relative pt-20 hero-section">
             <div
                 class="absolute top-1/4 right-margin-desktop hidden lg:block opacity-20 font-label-mono text-xs rotate-90 origin-right">
                 LOCATION_KOTA_BEKASI // LAT_-6.2383 / LONG_106.9756
             </div>
-            <div class="border-l border-tertiary pl-8 md:pl-16 space-y-4 hero-border-group">
-                <p class="font-label-mono text-tertiary tracking-widest text-neon">SYSTEM_BOOT_SEQUENCE // 2026</p>
-                <h1 class="hero-title font-display-lg text-display-lg md:text-[120px] leading-tight max-w-5xl"
-                    style="transform: translate(1.86px, -6.035px);">
-                    SULTAN<br />DHIYAUL<br />MUAKHIR
-                </h1>
-                <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-12 mt-12">
-                    <h2 class="font-headline-md text-headline-md text-on-surface-variant">
-                        Software Engineer &amp; <br class="md:hidden" /> Systems Architect
-                    </h2>
-                    <div class="max-w-md">
-                        <p class="font-body-lg text-body-lg text-on-surface-variant/80">
-                            Building robust software architectures, high-performance web applications, and weightless
-                            digital interfaces with mathematical precision and engineering rigor.
-                        </p>
+            <!-- Main content — flex-1 keeps it centered regardless of viewport height -->
+            <div class="flex-1 flex flex-col justify-center">
+                <div class="border-l border-tertiary pl-8 md:pl-16 space-y-4 hero-border-group">
+                    <p class="font-label-mono text-tertiary tracking-widest text-neon">SYSTEM_BOOT_SEQUENCE // 2026</p>
+                    <h1 class="hero-title font-display-lg text-display-lg md:text-[120px] leading-tight max-w-5xl"
+                        style="transform: translate(1.86px, -6.035px);">
+                        SULTAN<br />DHIYAUL<br />MUAKHIR
+                    </h1>
+                    <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-12 mt-12">
+                        <h2 class="font-headline-md text-headline-md text-on-surface-variant">
+                            Software Engineer &amp; <br class="md:hidden" /> Systems Architect
+                        </h2>
+                        <div class="max-w-md">
+                            <p class="font-body-lg text-body-lg text-on-surface-variant/80">
+                                Building robust software architectures, high-performance web applications, and weightless
+                                digital interfaces with mathematical precision and engineering rigor.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="absolute bottom-12 left-margin-desktop hidden md:flex gap-4 items-center animate-bounce hero-scroll-hint">
+            <!-- Scroll indicator — always below content, never overlapping -->
+            <div class="pb-12 hidden md:flex gap-4 items-center animate-bounce hero-scroll-hint">
                 <span class="material-symbols-outlined text-tertiary">south</span>
                 <span class="font-label-mono text-label-mono uppercase">Scroll to Initialize</span>
             </div>
