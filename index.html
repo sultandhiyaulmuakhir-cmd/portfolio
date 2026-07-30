@@ -410,11 +410,16 @@
         }
 
         /* ── Hero heading responsive ── */
+        /* Desktop: md:text-[120px] wins via Tailwind. Mobile: only this rule applies. */
         @media (max-width: 767px) {
             .hero-h1 {
-                font-size: clamp(52px, 14vw, 80px);
-                line-height: 1.0;
-                letter-spacing: -0.03em;
+                /* clamp(min, preferred, max)
+                   320px → 38px | 375px → 41px | 390px → 43px | 414px → 45px */
+                font-size: clamp(38px, 11vw, 80px) !important;
+                line-height: 1.05;
+                letter-spacing: -0.02em;
+                word-break: keep-all;
+                overflow-wrap: normal;
             }
         }
 
@@ -493,7 +498,7 @@
             </div>
             <div class="border-l border-tertiary pl-6 md:pl-16 space-y-4">
                 <p class="font-label-mono text-[10px] md:text-label-mono text-tertiary tracking-widest text-neon">SYSTEM_BOOT_SEQUENCE // 2026</p>
-                <h1 class="hero-h1 font-display-lg text-display-lg md:text-[120px] leading-tight max-w-5xl"
+                <h1 class="hero-h1 font-display-lg md:text-[120px] leading-tight max-w-5xl w-full"
                     style="transform: translate(1.86px, -6.035px);">
                     SULTAN<br />DHIYAUL<br />MUAKHIR
                 </h1>
