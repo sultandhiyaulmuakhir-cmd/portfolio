@@ -936,28 +936,6 @@
             }
         });
 
-        // Auto-update URL hash based on visible section
-        const heroSection = document.querySelector('main > section:first-child');
-        const namedSections = document.querySelectorAll('section[id]');
-
-        const urlObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                if (entry.target === heroSection) {
-                    // At the top — clear hash, restore clean URL
-                    history.replaceState({}, '', location.pathname);
-                } else {
-                    history.replaceState({}, '', '#' + entry.target.id);
-                }
-            });
-        }, {
-            threshold: 0,
-            rootMargin: '-40% 0px -55% 0px'
-        });
-
-        if (heroSection) urlObserver.observe(heroSection);
-        namedSections.forEach(s => urlObserver.observe(s));
-
         // Sequential Decrypt Animation
         const decryptText = (element) => {
             const original = element.getAttribute('data-text');
